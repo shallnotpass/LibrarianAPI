@@ -9,12 +9,12 @@ namespace LibrarianApi.BuisnessLayer.Contracts
 {
     public interface IBookService
     {
-        void Add(IBookExpanDto book);
-        void Update(IBookExpanDto book, int bookId);
-        void Delete(int bookId);
-        IBookExpanDto GetInfoById(int bookId);
-        IEnumerable<IBookDto> GetBooklistByUserId(int userId);
-        IEnumerable<IBookDto> GetAvalableBooks();
-        IEnumerable<IBookDto> FindBookByName(string name);
+        Task<int> Add(IBookExpanDto book);
+        Task<int> Update(IBookExpanDto book, int bookId);
+        Task<int> Delete(int bookId);
+        Task<IBookExpanDto> GetInfoById(int bookId);
+        Task<IEnumerable<IBookDto>> GetBooklistByUserId(int userId);
+        Task<IEnumerable<IBookDto>> GetAvalableBooks();
+        Task<IEnumerable<IBookDto>> FindBookByName(string name);
     }
 }

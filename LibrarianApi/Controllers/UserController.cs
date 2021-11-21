@@ -15,45 +15,45 @@ namespace LibrarianApi.Controllers
             this.UserService = UserService ?? throw new ArgumentNullException();
         }
         [HttpPost("Add")]
-        public void Add(UserDto user)
+        public async Task<int> Add(UserDto user)
         {
-            UserService.Add(user);
+            return await UserService.Add(user);
         }
 
         [HttpPost("Update")]
-        public void Update(UserDto user, int userId)
+        public async Task<int> Update(UserDto user, int userId)
         {
-            UserService.Update(user, userId);
+            return await UserService.Update(user, userId);
         }
 
         [HttpPost("Delete")]
-        public void Delete(int id)
+        public async Task<int> Delete(int id)
         {
-            UserService.Delete(id);
+            return await UserService.Delete(id);
         }
 
         [HttpPost("AddBook")]
-        public void AddBook(int userId, int bookId)
+        public async Task<int> AddBook(int userId, int bookId)
         {
-            UserService.AddBook(userId, bookId);
+            return await UserService.AddBook(userId, bookId);
         }
 
         [HttpPost("ReturnBook")]
-        public void ReturnBook(int userId, int bookId)
+        public async Task<int> ReturnBook(int userId, int bookId)
         {
-            UserService.ReturnBook(userId, bookId);
+            return await UserService.ReturnBook(userId, bookId);
         }
 
         [HttpPost("GetUserInfo")]
-        public IUserInfoDto GetUserInfo(int userId)
+        public async Task <IUserInfoDto> GetUserInfo(int userId)
         {
-            return UserService.GetUserInfo(userId);
+            return await UserService.GetUserInfo(userId);
         }
 
         [HttpPost("FindByFullname")]
-        public IEnumerable<IUserDto> FindByFullname(string term)
+        public async Task <IEnumerable<IUserDto>> FindByFullname(string term)
         {
-            return UserService.FindByFullName(term);
+            return await UserService.FindByFullName(term);
         }
     }
 }

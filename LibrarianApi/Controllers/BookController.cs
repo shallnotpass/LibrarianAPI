@@ -16,45 +16,45 @@ namespace LibrarianApi.Controllers
             this.bookService = bookService;
         }
         [HttpPost("Add")]
-        public void Add(BookExpanDto book)
+        public async Task<int> Add(BookExpanDto book)
         {
-            bookService.Add(book);
+            return await bookService.Add(book);
         }
 
         [HttpPost("Update")]
-        public void Update(BookExpanDto book, int bookId)
+        public async Task<int> Update(BookExpanDto book, int bookId)
         {
-            bookService.Update(book, bookId);
+            return await bookService.Update(book, bookId);
         }
 
         [HttpPost("Delete")]
-        public void Delete(int bookId)
+        public async Task<int> Delete(int bookId)
         {
-            bookService.Delete(bookId);
+            return await bookService.Delete(bookId);
         }
 
         [HttpPost("GetInfo")]
-        public IBookExpanDto GetInfoById(int bookId)
+        public async Task<IBookExpanDto> GetInfoById(int bookId)
         {
-            return bookService.GetInfoById(bookId);
+            return await bookService.GetInfoById(bookId);
         }
 
         [HttpPost("GetBooksByUser")]
-        public IEnumerable<IBookDto> GetBookListByUserId(int userId)
+        public async Task<IEnumerable<IBookDto>> GetBookListByUserId(int userId)
         {
-            return bookService.GetBooklistByUserId(userId);
+            return await bookService.GetBooklistByUserId(userId);
         }
 
         [HttpPost("GetAvalableBooks")]
-        public IEnumerable<IBookDto> GetAvalableBooks()
+        public async Task<IEnumerable<IBookDto>> GetAvalableBooks()
         {
-            return bookService.GetAvalableBooks();
+            return await bookService.GetAvalableBooks();
         }
 
         [HttpPost("FindBooksByName")]
-        public IEnumerable<IBookDto> FindBookByName(string name)
+        public async Task<IEnumerable<IBookDto>> FindBookByName(string name)
         {
-            return bookService.FindBookByName(name);
+            return await bookService.FindBookByName(name);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace LibrarianApi.BuisnessLayer
             this.dbContext = dbContext;
         }
 
-        public void Add(IUserDto user)
+        public async Task<int> Add(IUserDto user)
         {
             var userDbo = new User()
             {
@@ -26,9 +26,10 @@ namespace LibrarianApi.BuisnessLayer
 
             dbContext.Users.Add(userDbo);
             dbContext.SaveChanges();
+            return 1;
         }
 
-        public void AddBook(int userId, int bookId)
+        public async Task<int> AddBook(int userId, int bookId)
         {
             var user = dbContext.Users.Find(userId);
             if (user != null && user.IsDeleted != true)
@@ -51,12 +52,14 @@ namespace LibrarianApi.BuisnessLayer
                         dbContext.Update(book);
                         dbContext.Update(user);
                         dbContext.SaveChanges();
+                        return 1;
                     }
                 }
             }
+            return 0;
         }
 
-        public void Delete(int id)
+        public async Task<int> Delete(int id)
         {
             var user = dbContext.Users.Find(id);
             if (user != null)
@@ -64,10 +67,12 @@ namespace LibrarianApi.BuisnessLayer
                 user.IsDeleted = true;
                 dbContext.Update(user);
                 dbContext.SaveChanges();
+                return 1;
             }
+            return 0;
         }
 
-        public IEnumerable<IUserDto> FindByFullName(string term)
+        public async Task <IEnumerable<IUserDto>> FindByFullName(string term)
         {
             return dbContext.Users
                 .Where(x => x.FirstName.Contains(term) || x.SecondName.Contains(term) || x.Patronymic.Contains(term))
@@ -81,9 +86,8 @@ namespace LibrarianApi.BuisnessLayer
                 .ToList();
         }
 
-        public IUserInfoDto GetUserInfo(int userId)
+        public async Task<IUserInfoDto> GetUserInfo(int userId)
         {
-
             var user = dbContext.Users.Find(userId);
             if (user != null && user.IsDeleted != true)
             {
@@ -98,7 +102,8 @@ namespace LibrarianApi.BuisnessLayer
                         Author = new AuthorDto()
                         {
                             FirstName = x.Book.Author.FirstName,
-                            SecondName = x.Book.Author.SecondName
+                            SecondName = x.Book.Author.SecondName,
+                            Patronymic = x.Book.Author.Patronymic
                         },
                         Name = x.Book.Name,
                         Year = x.Book.Year
@@ -108,7 +113,7 @@ namespace LibrarianApi.BuisnessLayer
             return null;
         }
 
-        public void ReturnBook(int userId, int bookId)//
+        public async Task<int> ReturnBook(int userId, int bookId)
         {
             var user = dbContext.Users.Find(userId);
             if (user != null && user.IsDeleted != true)
@@ -125,12 +130,14 @@ namespace LibrarianApi.BuisnessLayer
                         dbContext.Update(changedEntry);
                         dbContext.Update(book.BookAccounting);
                         dbContext.SaveChanges();
+                        return 1;
                     }
                 }
             }
+            return 0;
         }
 
-        public void Update(IUserDto user, int userId)
+        public async Task<int> Update(IUserDto user, int userId)
         {
             var userDbo = dbContext.Users.Find(userId);
             if (userDbo != null)
@@ -141,7 +148,9 @@ namespace LibrarianApi.BuisnessLayer
                 userDbo.Birthday = user.Birthday;
                 dbContext.Update(userDbo);
                 dbContext.SaveChanges();
+                return 1;
             }
+            return 0;
         }
     }
 }

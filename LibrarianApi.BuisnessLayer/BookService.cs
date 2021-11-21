@@ -17,7 +17,7 @@ namespace LibrarianApi.BuisnessLayer
         {
             this.dbContext = dbContext;
         }
-        public void Add(IBookExpanDto book)
+        public async Task<int> Add(IBookExpanDto book)
         {
             var bookDbo = new Book()
             {
@@ -41,9 +41,10 @@ namespace LibrarianApi.BuisnessLayer
             };
             dbContext.Books.Add(bookDbo);
             dbContext.SaveChanges();
+            return 1;
         }
 
-        public void Delete(int bookId)
+        public async Task<int> Delete(int bookId)
         {
             var book = dbContext.Books.Find(bookId);
             if (book != null)
@@ -51,10 +52,12 @@ namespace LibrarianApi.BuisnessLayer
                 book.IsDeleted = true;
                 dbContext.Update(book);
                 dbContext.SaveChanges();
+                return 1;
             }
+            return 0;
         }
 
-        public IEnumerable<IBookDto> FindBookByName(string name)
+        public async Task<IEnumerable<IBookDto>> FindBookByName(string name)
         {
             return dbContext.Books.Where(x => x.Name.Contains(name) && x.IsDeleted != true)
                 .Select(x => new BookDto() 
@@ -70,21 +73,22 @@ namespace LibrarianApi.BuisnessLayer
                 }).ToList();
         }
 
-        public IEnumerable<IBookDto> GetAvalableBooks()
+        public async Task<IEnumerable<IBookDto>> GetAvalableBooks()
         {
-            return dbContext.Books.Select(x => new BookDto()
+            return dbContext.Books.Where(x => x.IsDeleted != true).Select(x => new BookDto()
             {
                 Author = new AuthorDto() 
                 { 
                     FirstName = x.Author.FirstName, 
-                    SecondName = x.Author.SecondName 
+                    SecondName = x.Author.SecondName,
+                    Patronymic = x.Author.Patronymic
                 },
                 Name = x.Name,
                 Year = x.Year
             }).ToList();
         }
 
-        public IEnumerable<IBookDto> GetBooklistByUserId(int userId)
+        public async Task<IEnumerable<IBookDto>> GetBooklistByUserId(int userId)
         {
             var userDbo = dbContext.Users.FirstOrDefault(x => x.Id == userId && x.IsDeleted != true);
             if (userDbo != null)
@@ -104,7 +108,7 @@ namespace LibrarianApi.BuisnessLayer
             return null;
         }
 
-        public IBookExpanDto GetInfoById(int bookId)
+        public async Task<IBookExpanDto> GetInfoById(int bookId)
         {
             var bookDbo = dbContext.Books.Find(bookId);
             if (bookDbo == null) return null;
@@ -129,7 +133,7 @@ namespace LibrarianApi.BuisnessLayer
             return null;
         }
 
-        public void Update(IBookExpanDto book, int bookId)
+        public async Task<int> Update(IBookExpanDto book, int bookId)
         {
             var bookDbo = dbContext.Books.FirstOrDefault(x=>x.Id == bookId);
             if (bookDbo != null)
@@ -152,8 +156,10 @@ namespace LibrarianApi.BuisnessLayer
                     bookDbo.Year = book.Year;
                     dbContext.Update(bookDbo);
                     dbContext.SaveChanges();
+                    return 1;
                 }
             }
+            return 0;
         }
     }
 }
